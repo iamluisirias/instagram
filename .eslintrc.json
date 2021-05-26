@@ -1,19 +1,28 @@
 {
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
     "extends": [
-        "airbnb",
-        "prettier",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "airbnb"
     ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
     "plugins": [
         "react",
         "prettier"
     ],
     "rules": {
-        "no-unused-vars": "warn"
-        
-    },
-    "env": {
-        "browser": true,
-        "node": true
+        "comma-dangle": ["error", "never"],
+        "no-unused-vars": ["warn"],
+        "linebreak-style": "off",
+        "import/no-extraneous-dependencies": "off"
+           
     }
 }

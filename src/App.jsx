@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const App = () => {
-
-  const [ state, setState ] = useState('hola');
+  const hola = 'Hola mundo';
 
   return (
     <div>
-      <h1>{ state }</h1>
+      <h1>{hola}</h1>
     </div>
   );
 };
