@@ -2,15 +2,16 @@ import Firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-// Se importa el archivo seed.js
-import seedDatabase from '../seed';
+const firebaseConfig = {
+  apiKey: 'AIzaSyDZ_OuB197JvIgwhtkJ35UPMMWsaA_qvHs',
+  authDomain: 'instagram-fb215.firebaseapp.com',
+  projectId: 'instagram-fb215',
+  storageBucket: 'instagram-fb215.appspot.com',
+  messagingSenderId: '532211477273',
+  appId: '1:532211477273:web:d3e2fc45601eeaacb0b388'
+};
 
-const config = {};
-
-const firebase = Firebase.initializeApp(config);
+const firebase = Firebase.initializeApp(firebaseConfig);
 const { FieldValue } = firebase.firestore;
-
-// Aquí es donde se llamará al archivo seed.js ( Solo una vez )
-// seedDatabase(firebase)
 
 export { firebase, FieldValue };
