@@ -59,7 +59,7 @@ const SignUp = () => {
         // authentication
         // email & password $ username
         await createdUserResult.user.updateProfile({
-          displayname: username
+          displayName: username
         });
 
         // firebase user collection (Create a document)
