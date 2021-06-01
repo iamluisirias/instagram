@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import FirebaseContext from '../context/firebase';
 import * as ROUTES from '../constants/routes';
 
-import doesUsernameExist from '../services/firebase';
+import { doesUsernameExist } from '../services/firebase';
 
 const SignUp = () => {
   const history = useHistory();

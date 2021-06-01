@@ -6,8 +6,10 @@ import * as ROUTES from './constants/routes';
 import UserContext from './context/user';
 
 import useAuth from './hooks/useAuth';
+import useUser from './hooks/useUser';
 
 import InstagramLogo from './components/InstagramLogo';
+
 /*
   - lazy es un import dinámico que lo que hace es que webpack divida el código de la app del bundle
   y busque solo por ese elemento.
