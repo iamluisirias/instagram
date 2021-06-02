@@ -10,16 +10,19 @@ const Sidebar = () => {
     user: {
       fullName,
       username,
-      userId
+      userId,
+      following
     }
   } = useUser();
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-white">
       <User fullName={fullName} username={username} />
-      <Suggestions userId={userId} />
+      <Suggestions userId={userId} following={following} />
     </div>
   );
 };
+
+Sidebar.whyDidYouRender = true;
 
 export default Sidebar;

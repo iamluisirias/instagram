@@ -6,7 +6,6 @@ import * as ROUTES from './constants/routes';
 import UserContext from './context/user';
 
 import useAuth from './hooks/useAuth';
-import useUser from './hooks/useUser';
 
 import InstagramLogo from './components/InstagramLogo';
 
