@@ -4,7 +4,7 @@ import PropTypes, { string } from 'prop-types';
 import { getSuggestedProfiles } from '../../services/firebase';
 import PreviewProfile from '../PreviewProfile';
 
-const Suggestions = ({ userId, following }) => {
+const Suggestions = ({ userId, docId, following }) => {
   const [profiles, setProfiles] = useState(null);
 
   // Function to get profiles for suggest to the user
@@ -39,7 +39,7 @@ const Suggestions = ({ userId, following }) => {
             {
               profiles.map((profile) => (
                 <li key={profile.userId} className="mb-4 last:mb-2">
-                  <PreviewProfile profile={profile} />
+                  <PreviewProfile profile={profile} authUserId={userId} docIdAuth={docId} />
                 </li>
               ))
             }
@@ -52,6 +52,7 @@ const Suggestions = ({ userId, following }) => {
 
 Suggestions.propTypes = {
   userId: PropTypes.string.isRequired,
+  docId: PropTypes.string.isRequired,
   following: PropTypes.arrayOf(string).isRequired
 };
 
