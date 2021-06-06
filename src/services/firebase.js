@@ -69,3 +69,33 @@ export async function updateFollowing(userFollowedId, docIdAuth, isFollowingProf
         : FieldValue.arrayUnion(userFollowedId)
     });
 }
+
+// Function to get the photos from the people that the auth user is following
+export async function getPhotos(userId, following) {
+  const result = await db
+    .collection('photos')
+    .where('userId', 'in', following)
+    .get();
+
+  const userFollowedPhotos = result.docs.map((photo) => ({
+    ...photo.data(),
+    docId: photo.id
+  }));
+
+  const photosWithUserDetails = await Promise.all(
+    userFollowedPhotos.map(async (photo) => {
+      let userLikedPhoto = false;
+
+      if (photo.likes.includes(userId)) {
+        userLikedPhoto = true;
+      }
+
+      // We extract te information of the user who post this partcular photo.
+      const user = await getUserByUserId(photo.userId);
+      const { username } = user[0];
+      return { username, ...photo, userLikedPhoto };
+    })
+  );
+
+  return photosWithUserDetails;
+}

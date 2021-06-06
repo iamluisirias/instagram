@@ -17,13 +17,11 @@ const Sidebar = () => {
   } = useUser();
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4">
       <User fullName={fullName} username={username} />
       <Suggestions userId={userId} docId={docId} following={following} />
     </div>
   );
 };
-
-Sidebar.whyDidYouRender = true;
 
 export default Sidebar;

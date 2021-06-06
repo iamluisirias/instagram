@@ -29,21 +29,23 @@ const Suggestions = ({ userId, docId, following }) => {
   // Then, we stored it in state.
   // Go ahead and render (waiting on the profile as an skeleton)
   return (
-    <div>
+    <div className="mt-10">
       {
         !profiles ? (
           <Skeleton count={1} height={200} className="mt-5" />
         ) : (
-          <ul className="mt-10">
+          <>
             <p className="font-bold text-gray-base mb-3">Suggestions for you</p>
-            {
-              profiles.map((profile) => (
-                <li key={profile.userId} className="mb-4 last:mb-2">
-                  <PreviewProfile profile={profile} authUserId={userId} docIdAuth={docId} />
-                </li>
-              ))
-            }
-          </ul>
+            <ul>
+              {
+                profiles.map((profile) => (
+                  <li key={profile.userId} className="mb-4 last:mb-2">
+                    <PreviewProfile profile={profile} authUserId={userId} docIdAuth={docId} />
+                  </li>
+                ))
+              }
+            </ul>
+          </>
         )
       }
     </div>

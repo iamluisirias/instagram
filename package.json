@@ -47,7 +47,6 @@
     ]
   },
   "devDependencies": {
-    "@welldone-software/why-did-you-render": "^6.1.4",
     "autoprefixer": "^10.2.6",
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",
