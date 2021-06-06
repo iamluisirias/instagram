@@ -52,6 +52,12 @@ const Interactions = ({
           </svg>
 
           <svg
+            onClick={handleFocus}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleFocus();
+              }
+            }}
             xmlns="http://www.w3.org/2000/svg"
             className="h-8 w-8 text-black-light select-none"
             fill="none"
