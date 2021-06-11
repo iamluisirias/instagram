@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import PropTypes, { string } from 'prop-types';
+import PropTypes from 'prop-types';
 import FirebaseContext from '../../context/firebase';
 import UserContext from '../../context/user';
 
@@ -17,6 +17,14 @@ const AddComment = ({
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
+
+    setComments([
+      {
+        displayName,
+        comment
+      },
+      ...comments
+    ]);
 
     return null;
   };
@@ -46,6 +54,11 @@ const AddComment = ({
           type="button"
           disabled={comment.length < 1}
           onClick={handleSubmitComment}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSubmitComment();
+            }
+          }}
         >
           Post
         </button>

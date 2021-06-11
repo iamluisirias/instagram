@@ -5,6 +5,11 @@
 // bg-blue-medium
 
 module.exports = {
+  variants: {
+    extend: {
+      textColor: ['active']
+    }
+  },
   future: {
     removeDeprecatedGapUtilities: true
   },

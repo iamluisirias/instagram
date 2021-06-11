@@ -99,3 +99,40 @@ export async function getPhotos(userId, following) {
 
   return photosWithUserDetails;
 }
+
+export async function getUserByUsername(username) {
+  const result = await db
+    .collection('users')
+    .where('username', '==', username)
+    .get();
+
+  const profile = result.docs.map((user) => ({
+    ...user.data(),
+    docId: user.id
+  }));
+
+  if (profile.length === 0) {
+    return {
+      exist: false
+    };
+  }
+
+  return {
+    exist: true,
+    profile
+  };
+}
+
+export async function getUserPhotosByUsername(username) {
+  const { profile } = await getUserByUsername(username);
+  const id = profile[0].userId;
+
+  const result = await db
+    .collection('photos')
+    .where('userId', '==', id)
+    .get();
+
+  return result.docs.map((photos) => ({
+    ...photos.data()
+  }));
+}

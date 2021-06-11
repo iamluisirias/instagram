@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes, { object, string } from 'prop-types';
+import PropTypes from 'prop-types';
 import { formatDistance } from 'date-fns';
 import { Link } from 'react-router-dom';
 
