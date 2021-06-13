@@ -12,40 +12,54 @@ import Reels from './Reels';
 import Channel from './Channel';
 import Tagged from './Tagged';
 
-const UserProfile = ({ username }) => {
+const UserProfile = ({ username, viewingOwnProfile }) => {
   const reducer = (state, newState) => ({ ...state, ...newState });
   const initialState = {
     user: {},
     photosCollection: [],
-    followerCount: 0
+    followerCount: 0,
+    title: 'Instagram'
   };
 
   const [
-    { user, photosCollection, followerCount }, dispatch
+    {
+      user, photosCollection, followerCount, title
+    }, dispatch
   ] = useReducer(reducer, initialState);
 
   const { path } = useRouteMatch();
-  console.log(path);
 
   useEffect(() => {
     async function getProfileInfoAndPhotos() {
-      const { profile } = await getUserByUsername(username);
-      const photos = await getUserPhotosByUsername(username);
+      try {
+        const { profile } = await getUserByUsername(username);
+        const photos = await getUserPhotosByUsername(username);
 
-      dispatch({
-        user: profile[0],
-        photosCollection: photos,
-        followerCount: profile[0].followers.length
-      });
+        dispatch({
+          user: profile[0],
+          photosCollection: photos,
+          followerCount: profile[0].followers.length,
+          title: `${profile[0].fullName} @(${profile[0].username}) - Instagram photos and videos`
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     getProfileInfoAndPhotos();
-  }, []);
+    document.title = title;
+  }, [username, title]);
 
   return user && photosCollection ? (
     <>
-      <Header user={user} postsNumber={photosCollection.length} followerCount={followerCount} />
+      <Header
+        user={user}
+        postsNumber={photosCollection.length}
+        followerCount={followerCount}
+        viewingOwnProfile={viewingOwnProfile}
+      />
       <Nav username={user.username} />
+
       <Switch>
         <Route path={path} exact>
           <Posts photos={photosCollection} />
@@ -67,7 +81,8 @@ const UserProfile = ({ username }) => {
 };
 
 UserProfile.propTypes = {
-  username: PropTypes.string.isRequired
+  username: PropTypes.string.isRequired,
+  viewingOwnProfile: PropTypes.bool.isRequired
 };
 
 export default UserProfile;

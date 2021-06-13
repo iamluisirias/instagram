@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PostPreview from './Post';
 
-const Posts = ({ photos }) => {
-  console.log(photos);
-  return photos && photos.length > 0
+const Posts = ({ photos }) => (
+  photos && photos.length > 0
     ? (
       <>
         <div className="grid grid-cols-3 place-items-center gap-7">
@@ -26,8 +25,8 @@ const Posts = ({ photos }) => {
         </div>
         <p className="font-light text-3xl">No Posts Yet</p>
       </div>
-    );
-};
+    )
+);
 
 Posts.propTypes = {
   photos: PropTypes.arrayOf(PropTypes.shape({})).isRequired

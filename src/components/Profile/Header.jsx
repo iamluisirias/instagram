@@ -1,29 +1,59 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
+import { Link, useRouteMatch } from 'react-router-dom';
 
 import UserContext from '../../context/user';
 
-const Header = ({ user, postsNumber, followerCount }) => {
+const Header = ({
+  user, postsNumber, followerCount
+}) => {
   const {
     username, fullName, following, followers
   } = user;
 
   // State for checking is the authenticated user is following the profile on screen.
   const [isFollowingProfile, setIsFollowingProfile] = useState(false);
+  const [ownProfile, setOwnProfile] = useState(false);
 
   const verified = true;
 
+  // This is null when is no user authenticated.
   const {
-    user: {
-      uid: userId
-    }
+    user: authUser
   } = useContext(UserContext);
 
+  const checkAuthUser = () => {
+    if (authUser) {
+      const { uid: userId, displayName } = authUser;
+      return {
+        userId,
+        displayName
+      };
+    }
+
+    return {
+      userId: '',
+      displayName: ''
+    };
+  };
+
+  const { url } = useRouteMatch();
+
   useEffect(() => {
-    if (followers && followers.includes(userId)) {
+    if (followers && followers.includes(checkAuthUser)) {
       setIsFollowingProfile(true);
     }
+
+    const viewingOwnProfile = () => {
+      const { displayName } = checkAuthUser();
+
+      if (displayName === username) {
+        setOwnProfile(true);
+      }
+    };
+
+    viewingOwnProfile();
   }, [followers]);
 
   return username ? (
@@ -44,29 +74,38 @@ const Header = ({ user, postsNumber, followerCount }) => {
             }
           </div>
           {
-            isFollowingProfile
+            !ownProfile
               ? (
-                <button
-                  type="button"
-                  className=" border border-gray-primary rounded text-black-light p-1 px-3 ml-4"
-                >
-                  <div className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                </button>
-              )
-              : (
-                <button
-                  type="button"
-                  className="bg-blue-medium rounded text-white p-1 px-3 ml-4"
-                >
-                  Follow
-                </button>
+                <>
+                  {
+                    isFollowingProfile
+                      ? (
+                        <button
+                          type="button"
+                          className=" border border-gray-primary rounded text-black-light p-1 px-3 ml-4"
+                        >
+                          <div className="flex">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        </button>
+                      )
+                      : (
+                        <button
+                          type="button"
+                          className="bg-blue-medium rounded text-white p-1 px-3 ml-4"
+                        >
+                          Follow
+                        </button>
+                      )
+                  }
+                </>
+              ) : (
+                null
               )
           }
         </div>
@@ -80,26 +119,30 @@ const Header = ({ user, postsNumber, followerCount }) => {
             {' '}
             post
           </p>
-          <p>
-            <span className="font-bold">
-              {
-                followerCount
-              }
-            </span>
-            {' '}
-            followers
-          </p>
-          <p>
-            <span className="font-bold">
-              {
-                following
-                  ? following.length
-                  : 0
-              }
-            </span>
-            {' '}
-            following
-          </p>
+          <Link to={`${url}/followers`}>
+            <p>
+              <span className="font-bold">
+                {
+                  followerCount
+                }
+              </span>
+              {' '}
+              followers
+            </p>
+          </Link>
+          <Link to={`${url}/following`}>
+            <p>
+              <span className="font-bold">
+                {
+                  following
+                    ? following.length
+                    : 0
+                }
+              </span>
+              {' '}
+              following
+            </p>
+          </Link>
         </div>
         <p className="font-semibold">{fullName}</p>
         <p className="text-justify">

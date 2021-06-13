@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   useParams, useHistory
 } from 'react-router-dom';
@@ -7,13 +7,13 @@ import * as ROUTES from '../constants/routes';
 
 import Header from '../components/Header';
 import UserProfile from '../components/Profile';
+import UserContext from '../context/user';
 
 const Profile = () => {
   // This came from the url we defined for the user's profiles.
   const { username } = useParams();
 
   const [user, setUser] = useState({});
-  const [title, setTitle] = useState('Instagram');
 
   const history = useHistory();
 
@@ -35,12 +35,10 @@ const Profile = () => {
     // I created this function to basically wait until is a user in state to change the page title
     const manageInfo = async () => {
       await checkUserExists();
-      setTitle(`${user.fullName} (@${user.username}) - Instagram photos and videos`);
     };
 
     manageInfo();
-    document.title = title;
-  }, [username, history, title]);
+  }, [username, history]);
 
   return user && username && (
     <>

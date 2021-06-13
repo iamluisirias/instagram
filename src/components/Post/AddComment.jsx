@@ -15,6 +15,18 @@ const AddComment = ({
 
   const [comment, setComment] = useState('');
 
+  // Function to add the comment to firebase
+  const saveComment = async (newComment) => {
+    const db = firebase.firestore();
+
+    await db
+      .collection('photos')
+      .doc(docId)
+      .update({
+        comments: FieldValue.arrayUnion(newComment)
+      });
+  };
+
   const handleSubmitComment = (e) => {
     e.preventDefault();
 
@@ -26,7 +38,10 @@ const AddComment = ({
       ...comments
     ]);
 
-    return null;
+    saveComment({
+      displayName,
+      comment
+    });
   };
 
   return (

@@ -27,7 +27,10 @@ const usePhotos = () => {
           setPhotos(
             response.sort((a, b) => b.dateCreated - a.dateCreated)
           );
+          return;
         }
+
+        setPhotos([]);
       } catch (error) {
         console.log(error);
       }

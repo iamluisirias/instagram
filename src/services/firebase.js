@@ -125,8 +125,12 @@ export async function getUserByUsername(username) {
 
 export async function getUserPhotosByUsername(username) {
   const { profile } = await getUserByUsername(username);
-  const id = profile[0].userId;
 
+  if (!profile) {
+    return [];
+  }
+
+  const id = profile[0].userId;
   const result = await db
     .collection('photos')
     .where('userId', '==', id)
