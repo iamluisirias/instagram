@@ -8,9 +8,12 @@ const Posts = ({ photos }) => (
       <>
         <div className="grid grid-cols-3 place-items-center gap-7">
           {
-            photos.map((photo) => (
-              <PostPreview key={photo.docId} photo={photo.imageSrc} />
-            ))
+            photos.map((photo) => {
+              const { photoId, imageSrc } = photo;
+              return (
+                <PostPreview key={photoId} photo={imageSrc} />
+              );
+            })
           }
         </div>
       </>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   useParams, useHistory
 } from 'react-router-dom';
@@ -7,7 +7,6 @@ import * as ROUTES from '../constants/routes';
 
 import Header from '../components/Header';
 import UserProfile from '../components/Profile';
-import UserContext from '../context/user';
 
 const Profile = () => {
   // This came from the url we defined for the user's profiles.

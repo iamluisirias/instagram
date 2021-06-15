@@ -1,68 +1,115 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
-import { Link, useRouteMatch } from 'react-router-dom';
 
 import UserContext from '../../context/user';
+import { getUserByUserId, updateFollowers, updateFollowing } from '../../services/firebase';
 
-const Header = ({
-  user, postsNumber, followerCount
-}) => {
+import { LOGIN } from '../../constants/routes';
+
+import Numbers from './Numbers';
+
+const Header = ({ user, postsNumber, followerCount }) => {
+  // Destructuring the data about that profile in particular.
   const {
-    username, fullName, following, followers
+    username, fullName, following, followers, docId, userId: profileId
   } = user;
 
-  // State for checking is the authenticated user is following the profile on screen.
-  const [isFollowingProfile, setIsFollowingProfile] = useState(false);
-  const [ownProfile, setOwnProfile] = useState(false);
+  // Using a reducer
+  const initialState = {
+    isFollowingProfile: false,
+    ownProfile: false,
+    verified: true,
+    loading: false
+  };
 
-  const verified = true;
+  const reducer = (state, newState) => ({ ...state, ...newState });
 
+  const [{
+    isFollowingProfile,
+    ownProfile,
+    verified,
+    loading
+  }, dispatch] = useReducer(reducer, initialState);
+
+  // Getting the user authenticated
   // This is null when is no user authenticated.
   const {
     user: authUser
   } = useContext(UserContext);
 
-  const checkAuthUser = () => {
-    if (authUser) {
-      const { uid: userId, displayName } = authUser;
-      return {
-        userId,
-        displayName
-      };
-    }
+  const history = useHistory();
 
-    return {
-      userId: '',
-      displayName: ''
-    };
+  // We need the data form the user authenticated.
+  const getDataUserAuthenticated = async () => {
+    const [result] = await getUserByUserId(authUser.uid);
+    return result;
   };
 
-  const { url } = useRouteMatch();
+  const handleFollow = async () => {
+    if (authUser) {
+      const userAuthId = authUser.uid;
+      const { docId: docIdAuth } = await getDataUserAuthenticated();
+
+      dispatch({
+        loading: true
+      });
+
+      try {
+        await updateFollowing(profileId, docIdAuth, isFollowingProfile);
+        await updateFollowers(userAuthId, docId, isFollowingProfile);
+
+        dispatch({
+          isFollowingProfile: !isFollowingProfile,
+          loading: false
+        });
+      } catch (error) {
+        console.log(error);
+        dispatch({
+          loading: false
+        });
+      }
+    } else {
+      history.push(LOGIN);
+    }
+  };
 
   useEffect(() => {
-    if (followers && followers.includes(checkAuthUser)) {
-      setIsFollowingProfile(true);
-    }
-
-    const viewingOwnProfile = () => {
-      const { displayName } = checkAuthUser();
-
-      if (displayName === username) {
-        setOwnProfile(true);
+    const checkingFollower = () => {
+      if (authUser) {
+        const followingId = authUser.uid;
+        if (followers && followers.includes(followingId)) {
+          dispatch({
+            isFollowingProfile: true
+          });
+        }
       }
     };
 
+    const viewingOwnProfile = () => {
+      if (authUser) {
+        const { displayName } = authUser;
+
+        if (displayName === username) {
+          dispatch({
+            ownProfile: true
+          });
+        }
+      }
+    };
+
+    checkingFollower();
     viewingOwnProfile();
   }, [followers]);
 
   return username ? (
-    <header className="grid grid-cols-6">
-      <div className="col-span-2 mx-auto w-3/5">
+    <header className="grid grid-cols-6 mx-auto max-w-screen-lg">
+      <div className="container col-span-2 mx-auto w-3/5">
         <img
           src={`/images/avatars/${username}.jpg`}
           alt={`${username} profile`}
-          className="rounded-full mx-auto w-full"
+          className="rounded-full w-full"
         />
       </div>
       <section className="col-span-4">
@@ -80,70 +127,61 @@ const Header = ({
                   {
                     isFollowingProfile
                       ? (
-                        <button
-                          type="button"
-                          className=" border border-gray-primary rounded text-black-light p-1 px-3 ml-4"
-                        >
-                          <div className="flex">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                          </div>
-                        </button>
+                        <>
+                          <button
+                            type="button"
+                            className=" border border-gray-primary rounded text-black-light p-1 px-3 ml-4"
+                            onClick={handleFollow}
+                          >
+                            {
+                              !loading
+                                ? (
+                                  <div className="flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                  </div>
+                                )
+                                : (
+                                  <p>Loading</p>
+                                )
+                            }
+                          </button>
+                          <button
+                            type="button"
+                            className=" border border-gray-primary rounded text-black-light p-1 px-3 ml-1 font-semibold text-sm"
+                          >
+                            Send Message
+                          </button>
+                        </>
                       )
                       : (
                         <button
                           type="button"
                           className="bg-blue-medium rounded text-white p-1 px-3 ml-4"
+                          onClick={handleFollow}
                         >
-                          Follow
+                          {
+                            !loading ? 'Follow' : 'Loading'
+                          }
                         </button>
                       )
                   }
                 </>
               ) : (
-                null
+                <button
+                  type="button"
+                  className="border rounded border-gray-primary px-3 ml-5 text-black-light text-sm font-semibold"
+                >
+                  Edit Profile
+                </button>
               )
           }
         </div>
-        <div className="flex justify-between my-5 w-1/2">
-          <p>
-            <span className="font-bold">
-              {
-                postsNumber
-              }
-            </span>
-            {' '}
-            post
-          </p>
-          <Link to={`${url}/followers`}>
-            <p>
-              <span className="font-bold">
-                {
-                  followerCount
-                }
-              </span>
-              {' '}
-              followers
-            </p>
-          </Link>
-          <Link to={`${url}/following`}>
-            <p>
-              <span className="font-bold">
-                {
-                  following
-                    ? following.length
-                    : 0
-                }
-              </span>
-              {' '}
-              following
-            </p>
-          </Link>
-        </div>
+        <Numbers posts={postsNumber} followers={followerCount} following={following.length} />
         <p className="font-semibold">{fullName}</p>
         <p className="text-justify">
           Descripcion del perfil para comprobar que tanto es el ancho de esta mierda y ver como
@@ -171,7 +209,9 @@ Header.propTypes = {
     username: PropTypes.string.isRequired,
     fullName: PropTypes.string.isRequired,
     followers: PropTypes.arrayOf(PropTypes.string).isRequired,
-    following: PropTypes.arrayOf(PropTypes.string).isRequired
+    following: PropTypes.arrayOf(PropTypes.string).isRequired,
+    docId: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired
   }).isRequired,
   postsNumber: PropTypes.number.isRequired,
   followerCount: PropTypes.number.isRequired

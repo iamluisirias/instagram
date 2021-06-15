@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import PropTypes, { string } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import Header from './Header';
 import Interactions from './Interactions';
@@ -63,7 +63,7 @@ Post.propTypes = {
     caption: PropTypes.string.isRequired,
     docId: PropTypes.string.isRequired,
     userLikedPhoto: PropTypes.bool.isRequired,
-    likes: PropTypes.arrayOf(string).isRequired,
+    likes: PropTypes.arrayOf(PropTypes.string).isRequired,
     comments: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     dateCreated: PropTypes.number.isRequired
   }).isRequired
