@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
+import PulseLoader from 'react-spinners/PulseLoader';
 
 import UserContext from '../../context/user';
 import { getUserByUserId, updateFollowers, updateFollowing } from '../../services/firebase';
@@ -146,7 +147,7 @@ const Header = ({ user, postsNumber, followerCount }) => {
                                   </div>
                                 )
                                 : (
-                                  <p>Loading</p>
+                                  <PulseLoader size={4} color="black" margin={2} />
                                 )
                             }
                           </button>
@@ -165,7 +166,7 @@ const Header = ({ user, postsNumber, followerCount }) => {
                           onClick={handleFollow}
                         >
                           {
-                            !loading ? 'Follow' : 'Loading'
+                            !loading ? 'Follow' : <PulseLoader size={4} color="white" margin={2} />
                           }
                         </button>
                       )
@@ -184,7 +185,7 @@ const Header = ({ user, postsNumber, followerCount }) => {
         <Numbers posts={postsNumber} followers={followerCount} following={following.length} />
         <p className="font-semibold">{fullName}</p>
         <p className="text-justify">
-          Descripcion del perfil para comprobar que tanto es el ancho de esta mierda y ver como
+          Descripción del perfil para comprobar que tanto es el ancho de esta mierda y ver como
           se adapta a la pagina
         </p>
         <p>Link de spam</p>
