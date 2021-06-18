@@ -12,7 +12,7 @@ import Reels from './Reels';
 import Channel from './Channel';
 import Tagged from './Tagged';
 
-const UserProfile = ({ username, viewingOwnProfile }) => {
+const UserProfile = ({ username }) => {
   const reducer = (state, newState) => ({ ...state, ...newState });
   const initialState = {
     user: {},
@@ -56,7 +56,6 @@ const UserProfile = ({ username, viewingOwnProfile }) => {
         user={user}
         postsNumber={photosCollection.length}
         followerCount={followerCount}
-        viewingOwnProfile={viewingOwnProfile}
       />
       <Nav username={user.username} />
 
@@ -81,8 +80,7 @@ const UserProfile = ({ username, viewingOwnProfile }) => {
 };
 
 UserProfile.propTypes = {
-  username: PropTypes.string.isRequired,
-  viewingOwnProfile: PropTypes.bool.isRequired
+  username: PropTypes.string.isRequired
 };
 
 export default UserProfile;

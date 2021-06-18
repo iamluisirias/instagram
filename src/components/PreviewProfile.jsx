@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import PulseLoader from 'react-spinners/PulseLoader';
 import { updateFollowers, updateFollowing } from '../services/firebase';
 
 const PreviewProfile = ({ profile, authUserId, docIdAuth }) => {
@@ -8,16 +9,19 @@ const PreviewProfile = ({ profile, authUserId, docIdAuth }) => {
   } = profile;
 
   const [followed, setFollowed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleFollowUser = async () => {
+    setLoading(true);
     try {
       // update the following array of the logged in users
       await updateFollowing(userId, docIdAuth, followed);
       // update the followers array of the user who has been followed
       await updateFollowers(authUserId, docId, followed);
       setFollowed(!followed);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      setLoading(false);
     }
   };
 
@@ -42,7 +46,9 @@ const PreviewProfile = ({ profile, authUserId, docIdAuth }) => {
               className="text-sm bg-blue-medium px-3 py-2 rounded text-white"
               onClick={handleFollowUser}
             >
-              Follow
+              {
+                !loading ? 'Follow' : <PulseLoader color="white" size="7" />
+              }
             </button>
           ) : (
             <button
@@ -50,7 +56,9 @@ const PreviewProfile = ({ profile, authUserId, docIdAuth }) => {
               className="text-sm bg-blue-medium opacity-50 px-3 py-2 rounded text-white"
               onClick={handleFollowUser}
             >
-              Followed
+              {
+                !loading ? 'Followed' : <PulseLoader color="white" size="7" />
+              }
             </button>
           )
         }

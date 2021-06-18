@@ -19,7 +19,9 @@ const Numbers = ({ posts, followers, following = 0 }) => {
                   }
                 </span>
                 {' '}
-                post
+                {
+                  posts !== 1 ? 'posts' : 'post'
+                }
               </p>
               <Link to={`${url}/followers`}>
                 <p>
@@ -29,7 +31,9 @@ const Numbers = ({ posts, followers, following = 0 }) => {
                     }
                   </span>
                   {' '}
-                  followers
+                  {
+                    followers !== 1 ? 'followers' : 'follower'
+                  }
                 </p>
               </Link>
               <Link to={`${url}/following`}>

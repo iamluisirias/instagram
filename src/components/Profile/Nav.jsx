@@ -12,7 +12,7 @@ const Nav = () => {
             to={`${url}`}
             activeClassName="text-gray-base border-t-2 border-gray-base pt-4"
           >
-            Posts
+            <span>Posts</span>
           </NavLink>
         </li>
         <li>

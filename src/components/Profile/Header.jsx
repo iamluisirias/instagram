@@ -192,15 +192,15 @@ const Header = ({ user, postsNumber, followerCount }) => {
       </section>
     </header>
   ) : (
-    <div className="w-full grid grid-cols-2 h-48">
-      <Skeleton
-        circle="true"
-        height="100%"
-        width="40%"
-      />
-      <Skeleton
-        height="100%"
-      />
+    <div className="grid grid-cols-6 mx-auto max-w-screen-lg">
+      <div className="col-span-2 mr-12">
+        <Skeleton height="12rem" width="12rem" circle="true" className="ml-20" />
+      </div>
+      <div className=" lg:col-span-3  place-content-between">
+        <Skeleton height="2.5rem" className="mb-4" width="50%" />
+        <Skeleton height="1.5rem" className="mb-4" width="60%" />
+        <Skeleton height="4rem" />
+      </div>
     </div>
   );
 };
